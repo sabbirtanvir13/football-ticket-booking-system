@@ -17,7 +17,7 @@ CREATE TABLE Matches (
   match_id SERIAL primary key,
   fixture VARCHAR(255) not null,
   tournament_category VARCHAR(255) not null,
-  base_ticket_price DECIMAL(8, 2) not null CHECK (base_ticket_price >= 0),
+  base_ticket_price INTEGER (8, 2) not null CHECK (base_ticket_price >= 0),
   match_status VARCHAR(255) not null CHECK (
     match_status IN (
       'Available',
@@ -43,7 +43,7 @@ CREATE TABLE Bookings (
   payment_status VARCHAR(255) CHECK (
     payment_status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')
   ),
-  total_cost DECIMAL(10, 2) not null CHECK (total_cost >= 0)
+  total_cost INTEGER (10, 2) not null CHECK (total_cost >= 0)
 );
 
 
