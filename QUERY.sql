@@ -191,7 +191,11 @@ select booking_id,match_id,total_cost::integer from bookings where total_cost>(
 )
 
 -- Retrieve the top 2 most expensive matches sorted by base ticket price, skipping the absolute highest premium match.
-select match_id, fixture, base_ticket_price from matches
-WHERE base_ticket_price < (select MAX(base_ticket_price) FROM matches)
-ORDER BY base_ticket_price DESC
-LIMIT 2;
+select
+  match_id,
+  fixture,
+  base_ticket_price
+from matches
+order by base_ticket_price desc
+offset 1
+limit 2;
