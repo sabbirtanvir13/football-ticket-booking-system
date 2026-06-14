@@ -1,7 +1,7 @@
 
--- =========================================================================
+
 -- 1. CREATE USERS TABLE
--- =========================================================================
+
 CREATE TABLE Users (
   user_id SERIAL primary key,
   full_name VARCHAR(255) not null,
@@ -10,9 +10,9 @@ CREATE TABLE Users (
   phone_number VARCHAR(50)
 );
 
--- =========================================================================
+
 -- 2. CREATE MATCHES TABLE
--- =========================================================================
+
 CREATE TABLE Matches (
   match_id SERIAL primary key,
   fixture VARCHAR(255) not null,
@@ -33,9 +33,8 @@ ALTER TABLE matches
 ALTER COLUMN base_ticket_price TYPE INT
 USING base_ticket_price::INT;
 
--- =========================================================================
+
 -- 3. CREATE BOOKINGS TABLE
--- =========================================================================
 CREATE TABLE Bookings (
   booking_id SERIAL primary key,
   user_id INTEGER REFERENCES users (user_id) not null,
@@ -47,9 +46,9 @@ CREATE TABLE Bookings (
   total_cost DECIMAL(10, 2) not null CHECK (total_cost >= 0)
 );
 
--- =========================================================================
+
 -- DATA SEEDING: INSERT SAMPLE DATA INTO USERS
--- =========================================================================
+
 INSERT INTO
   Users (user_id, full_name, email, role, phone_number)
 VALUES
@@ -148,7 +147,7 @@ VALUES
   (503, 2, 101, 'A-13', 'Confirmed', 150.00),
   (504, 2, 101, NULL, NULL, 150.00),
   (505, 3, 102, 'C-20', 'Pending', 120.00);
-
+-- Retrieve all upcoming football matches belonging to the 'Champions League' where the match status is 'Available'
 select
   match_id,
   fixture,
@@ -170,6 +169,30 @@ where
  or full_name ilike '%Haque'
 
 
+-- Retrieve all booking records where the payment status is missing (NULL), replacing the empty result with 'Action Required
 
--- Query 3: Retrieve all booking records where the payment status is missing (NULL), replacing the empty result with 'Action Required'.
+ Retrieve all booking records where the payment status is missing (NULL), replacing the empty result with 'Action Required'.
 select booking_id,user_id,match_id ,coalesce(payment_status, 'Action Required') as systematic_status from bookings where payment_status  is null
+
+
+-- Retrieve match booking details along with the User's full name and the scheduled Match fixture teams.
+
+select booking_id,full_name,fixture,total_cost::INTEGER from bookings
+inner join Users on Bookings.user_id= Users.user_id
+inner join matches on Bookings.match_id= Matches.match_id
+
+-- Display a comprehensive list of all users and their booking IDs, ensuring that fans who have never bought a ticket are still listed.
+
+select users.user_id,users.full_name,bookings.booking_id from users left join Bookings on  Users.user_id = Bookings.user_id 
+
+
+-- Find all ticket bookings where the total cost is strictly higher than the average cost of all ticket bookings.
+select booking_id,match_id,total_cost::integer from bookings where total_cost>(
+  select avg(total_cost) from bookings
+)
+
+-- Retrieve the top 2 most expensive matches sorted by base ticket price, skipping the absolute highest premium match.
+select match_id, fixture, base_ticket_price from matches
+WHERE base_ticket_price < (select MAX(base_ticket_price) FROM matches)
+ORDER BY base_ticket_price DESC
+LIMIT 2;
