@@ -159,7 +159,6 @@ Retrieve the top expensive matches while skipping the highest-priced match.
 .
 ├── README.md
 ├── QUERY.sql
-└── ERD
 ```
 
 ---
@@ -172,7 +171,7 @@ https://drawsql.app/teams/tanvir-ahmed-sabbir/diagrams/football-ticket-booking-s
 
 ### GitHub Repository
 
-(Add your GitHub repository link here)
+[(Add your GitHub repository link here)](https://github.com/sabbirtanvir13/football-ticket-booking-system.git)
 
 ### Interview Video
 
